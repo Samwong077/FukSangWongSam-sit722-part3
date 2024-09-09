@@ -1,16 +1,14 @@
-services:
-  book_catalog:
-    image: s224078886.azurecr.io/book-catalog:1
-    container_name: book_catalog
-    ports:
-      - "8001:8000"
-    environment:
-      - DATABASE_URL=postgresql://s224078886_sit722_part3_w74m_user:as3doK0qivAyK7BjwRJbSVpoX7iio9br@dpg-cretpt3v2p9s73d2qqr0-a.oregon-postgres.render.com/s224078886_sit722_part3_w74m?sslmode=require
+version: '3'
 
-  inventory_management:
-    image: s224078886.azurecr.io/inventory-management:1
-    container_name: inventory_management
-    ports:
-      - "8002:8000"
-    environment:
-      - DATABASE_URL=postgresql://s224078886_sit722_part3_w74m_user:as3doK0qivAyK7BjwRJbSVpoX7iio9br@dpg-cretpt3v2p9s73d2qqr0-a.oregon-postgres.render.com/s224078886_sit722_part3_w74m?sslmode=require
+services:
+  app1:
+    build:
+      context: ./book_catalog
+      dockerfile: Dockerfile
+    image: book-catalog
+
+  app2:
+    build:
+      context: ./inventory_management
+      dockerfile: Dockerfile
+    image: inventory-management
