@@ -1,14 +1,29 @@
-version: '3'
+version: '3.8'
 
 services:
-  app1:
-    build:
-      context: ./book_catalog
-      dockerfile: Dockerfile
-    image: book-catalog
+  book_catalog:
+    build: ./book_catalog
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://sit722_part3_fc14_user:Dm05fdlZN0I9DP5bqhPLtoSfJIJER3Nu@dpg-cri8p12j1k6c73ar51g0-a.singapore-postgres.render.com/sit722_part3_fc14
+    depends_on:
+      - postgres
 
-  app2:
-    build:
-      context: ./inventory_management
-      dockerfile: Dockerfile
-    image: inventory-management
+  inventory_management:
+    build: ./inventory_management
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://sit722_part3_fc14_user:Dm05fdlZN0I9DP5bqhPLtoSfJIJER3Nu@dpg-cri8p12j1k6c73ar51g0-a.singapore-postgres.render.com/sit722_part3_fc14
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: sit722_part3_fc14_user
+      POSTGRES_PASSWORD: Dm05fdlZN0I9DP5bqhPLtoSfJIJER3Nu
+      POSTGRES_DB: sit722_part3_fc14
+    ports:
+      - "5432:5432"

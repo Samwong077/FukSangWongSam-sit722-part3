@@ -1,82 +1,74 @@
-# Deployment for Book Catalog Service
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: library
-  labels:
-    app: library
+  name: book-catalog-deployment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: library
+      app: book-catalog
   template:
     metadata:
       labels:
-        app: library
+        app: book-catalog
     spec:
       containers:
-      - name: library
-        image: s224078886.azurecr.io/library:1
-        imagePullPolicy: Always 
+      - name: book-catalog
+        image: 224078886.azurecr.io/book_catalog:v1
         ports:
-        - containerPort: 8001
-      imagePullSecrets:
-      - name: acr-secret
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://sit722_part3_fc14_user:Dm05fdlZN0I9DP5bqhPLtoSfJIJER3Nu@dpg-cri8p12j1k6c73ar51g0-a.singapore-postgres.render.com/sit722_part3_fc14"
 
 ---
-# Service for Book Catalog
 apiVersion: v1
 kind: Service
 metadata:
-  name: library-service-book
+  name: book-catalog-service
 spec:
   selector:
-    app: library
+    app: book-catalog
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8001
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
   type: LoadBalancer
 
 ---
-# Deployment for Inventory Management Service
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inventory
-  labels:
-    app: inventory
+  name: inventory-management-deployment
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: inventory
+      app: inventory-management
   template:
     metadata:
       labels:
-        app: inventory
+        app: inventory-management
     spec:
       containers:
-      - name: inventory
-        image: s224078886.azurecr.io/inventory:1
-        imagePullPolicy: Always 
+      - name: inventory-management
+        image: 224078886.azurecr.io/inventory_management:v1
         ports:
-        - containerPort: 8002
-      imagePullSecrets:
-      - name: acr-secret
+        - containerPort: 8001
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://sit722_part3_fc14_user:Dm05fdlZN0I9DP5bqhPLtoSfJIJER3Nu@dpg-cri8p12j1k6c73ar51g0-a.singapore-postgres.render.com/sit722_part3_fc14"
 
 ---
-# Service for Inventory Management
 apiVersion: v1
 kind: Service
 metadata:
-  name: inventory-service-management
+  name: inventory-management-service
 spec:
   selector:
-    app: inventory
+    app: inventory-management
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8002
+  - protocol: TCP
+    port: 80
+    targetPort: 8001
   type: LoadBalancer
